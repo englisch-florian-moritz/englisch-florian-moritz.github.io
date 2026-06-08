@@ -175,7 +175,10 @@ async function requestOpenAiJson(systemPrompt: string, userPrompt: string) {
 }
 
 function requestGeneratedQuestion(questions: unknown[]) {
-  return requestOpenAiJson(getSysPrompt(), getUserPrompt(JSON.stringify(questions)));
+  return requestOpenAiJson(
+    getSysPrompt(),
+    getUserPrompt(JSON.stringify(questions)),
+  );
 }
 
 function requestFinishResult(questions: unknown[]) {

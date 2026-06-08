@@ -39,7 +39,9 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function isStringArray(value: unknown): value is string[] {
-  return Array.isArray(value) && value.every((item) => typeof item === "string");
+  return (
+    Array.isArray(value) && value.every((item) => typeof item === "string")
+  );
 }
 
 function hasStringProperties(
@@ -167,7 +169,7 @@ function Hero() {
             {Array.from({ length: 12 }).map((_, index) => (
               <img
                 key={index}
-                className="w-[500px] flex-none scale-75 opacity-75 max-[700px]:w-[340px]"
+                className="w-125 flex-none scale-75 opacity-75 max-[700px]:w-85"
                 src="/elems.png"
                 alt=""
               />
@@ -188,7 +190,7 @@ function Hero() {
             {Array.from({ length: 12 }).map((_, index) => (
               <img
                 key={index}
-                className="w-[500px] flex-none max-[700px]:w-[340px]"
+                className="w-125 flex-none max-[700px]:w-85"
                 src="/elems.png"
                 alt=""
               />
@@ -232,15 +234,15 @@ function StationCard({
 }) {
   return (
     <article
-      className="w-full max-w-2xl rounded-[2rem] border-2 border-black bg-white/90 p-6 text-left shadow-[6px_6px_0_#111] transition max-[700px]:translate-x-0!"
+      className="w-full max-w-2xl rounded-4xl border-2 border-black bg-white/90 p-6 text-left shadow-[6px_6px_0_#111] transition max-[700px]:translate-x-0!"
       style={{
         transform: `translate(${station.offsetX}px, ${station.offsetY}px) rotate(${station.rotation}deg)`,
       }}
     >
-      <p className="font-title text-sm tracking-[0.35em] uppercase opacity-70">
-        Station {index + 1} / {totalQuestions}
-      </p>
-      <p className="mt-4 text-lg leading-8">{station.situation}</p>
+      <div className="flex gap-3">
+        <p className="text-lg leading-8">{station.situation}</p>
+        <p className="text-sm">{index + 1}</p>
+      </div>
       <h2 className="mt-6 font-title text-3xl leading-tight">
         {station.question}
       </h2>
@@ -261,15 +263,9 @@ function StationCard({
   );
 }
 
-function FinishCard({
-  finishResult,
-  onRestart,
-}: {
-  finishResult: FinishResult;
-  onRestart: () => void;
-}) {
+function FinishCard({ finishResult }: { finishResult: FinishResult }) {
   return (
-    <section className="mt-12 w-full max-w-3xl rounded-[2rem] border-2 border-black bg-white/95 p-7 text-left shadow-[7px_7px_0_#111]">
+    <section className="mt-12 w-full max-w-3xl rounded-4xl border-2 border-black bg-white/95 p-7 text-left shadow-[7px_7px_0_#111]">
       <p className="font-title text-sm tracking-[0.35em] uppercase opacity-70">
         Final Result
       </p>
@@ -295,13 +291,6 @@ function FinishCard({
       <p className="mt-6 rounded-3xl border-2 border-black bg-white p-5 leading-7">
         {finishResult.summary}
       </p>
-      <button
-        className="mt-6 rounded-full border-2 border-black bg-white px-7 py-3 shadow-[4px_4px_0_#111] transition hover:-translate-y-0.5 hover:shadow-[6px_6px_0_#111]"
-        onClick={onRestart}
-        type="button"
-      >
-        Start again
-      </button>
     </section>
   );
 }
@@ -442,7 +431,6 @@ function JourneyPath({
   finishResult,
   isLoading,
   onAnswer,
-  onRestart,
   stations,
 }: {
   finishResult?: FinishResult;
@@ -472,9 +460,7 @@ function JourneyPath({
 
       {isLoading ? <LoadingPill /> : null}
 
-      {finishResult ? (
-        <FinishCard finishResult={finishResult} onRestart={onRestart} />
-      ) : null}
+      {finishResult ? <FinishCard finishResult={finishResult} /> : null}
     </section>
   );
 }
@@ -494,7 +480,9 @@ function IntroSection({
     <section className="mx-auto flex max-w-5xl flex-col items-center text-center">
       <Hero />
 
-      {stationCount === 0 && !isLoading ? <StartButton onStart={onStart} /> : null}
+      {stationCount === 0 && !isLoading ? (
+        <StartButton onStart={onStart} />
+      ) : null}
 
       {error ? <ErrorBox error={error} /> : null}
     </section>
