@@ -1,0 +1,64 @@
+name: Deploy Pages Branch
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      VITE_API_URL: https://temp.methanium.net/
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build web app
+        run: bun --filter @englisch/web build
+
+      - name: Prepare pages branch
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          rm -rf /tmp/pages-branch
+
+          if git ls-remote --exit-code --heads origin pages >/dev/null 2>&1; then
+            git fetch origin pages:refs/remotes/origin/pages
+            git worktree add -B pages /tmp/pages-branch origin/pages
+          else
+            git worktree add --detach /tmp/pages-branch
+            git -C /tmp/pages-branch switch --orphan pages
+          fi
+
+          git -C /tmp/pages-branch rm -r --ignore-unmatch .
+          find /tmp/pages-branch -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -R apps/web/dist/. /tmp/pages-branch/
+          touch /tmp/pages-branch/.nojekyll
+
+          git -C /tmp/pages-branch add -A
+
+          if git -C /tmp/pages-branch diff --cached --quiet; then
+            echo "No pages changes to deploy."
+            exit 0
+          fi
+
+          git -C /tmp/pages-branch commit -m "Deploy web app"
+          git -C /tmp/pages-branch push origin pages

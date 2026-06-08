@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Title";
+  src: url("/title.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Text";
+  src: url("/text.ttf") format("truetype");
+  font-display: swap;
+}
+
+@theme {
+  --font-title: "Title", sans-serif;
+  --font-text: "Text", system-ui, sans-serif;
+  --animate-scroll-left: scroll-left 35s linear infinite;
+  --animate-bounce-small: bounce-small 1s infinite;
+}
+
+@layer base {
+  :root {
+    font-family: var(--font-text);
+    color: #111;
+    background: #fff url("/bg.png") repeat top left;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html,
+  body,
+  #root {
+    min-height: 100%;
+    margin: 0;
+  }
+
+  body {
+    min-width: 320px;
+  }
+}
+
+@keyframes scroll-left {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes bounce-small {
+  0%,
+  100% {
+    transform: translateY(0) translateX(-50%);
+  }
+
+  50% {
+    transform: translateY(-8px) translateX(-50%);
+  }
+}
