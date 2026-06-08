@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "VITE_API_URL=http://localhost:3000 vite",
-    "build": "vite build",
+    "dev": "VITE_API_URL=http://localhost:3000 VITE_API_PASSWORD=MyVerySecurePasswordThatIsJustUsedForAntiBot vite",
+    "build": "VITE_API_PASSWORD=MyVerySecurePasswordThatIsJustUsedForAntiBot vite build",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -1,12 +1,12 @@
 export default function getPrompt(input: string) {
   return `
     Theme:  
-Immigration plays a huge role. America is a place of hope and promise, a place where you can "become somebody," but the machine and policies are anything but welcoming and clear, and the road to citizenship is jagged. Discuss the portrayal of American immigration. How does this shift the traditional representation of America?
+Immigration plays a huge role. America is a place of hope and promise, a place where you can "become somebody," but immigration policy, deportation risk, paperwork, court dates, work rules, school forms, and legal status make the road uncertain. Discuss how American immigration is shown as both a dream and a system of pressure. How does this shift the traditional representation of America?
 
 Time period / setting:  
 ~2007-2008
 
-Base questions and situations to learn the style from:  
+Base questions and situations to learn the style from. Keep the generated story slightly more general and immigration-focused than these examples, with less private emotion and more attention to systems, law, documents, deportation, work, school, and public pressure:  
 [  
 {  
 "situation": "You are 17 and arrive in New Jersey in 2007 with your mother and little brother. Your uncle says America is where people can become somebody if they work hard. At night, your mother hides a folder with visas, letters, bills, and old promises from a lawyer. The apartment is small, but the city lights make your brother smile. You feel hope, but you also feel that the dream already has locked doors.",  
@@ -105,6 +105,12 @@ ${input}
 
 Generate the next single situation, question, and three answer options.
 
-Use the theme, time period, and base questions as guidance. Continue the story from the previous JSON. Avoid repeating the same kind of situation or decision. Return only raw valid JSON that can be passed directly into JSON.parse.
+Use the theme, time period, and base questions as guidance. Continue the story from the previous JSON. Avoid repeating the same kind of situation or decision.
+
+The full journey has a maximum of 10 generated questions. Count the previous JSON items to know which question comes next. If the next question is 8 or 9, move the story toward consequences and resolution. If the next question is 10, write a closing immigration-focused situation that ends the journey clearly instead of creating a cliffhanger.
+
+Make the situation and question strongly connected to immigration, deportation risk, legal status, documents, official letters, court or agency decisions, work/school consequences, or community/legal support. Keep it a little generalized: the player is involved, but the situation should also show the wider immigrant experience and not only private personal feelings.
+
+Return only raw valid JSON that can be passed directly into JSON.parse.
 `;
 }
