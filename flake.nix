@@ -64,6 +64,12 @@
                 default = 3000;
                 description = "Port for the Bun API service.";
               };
+
+              environmentFile = lib.mkOption {
+                type = lib.types.nullOr lib.types.str;
+                default = null;
+                description = "Path to an environment file containing OPENAI environment variables for the API service.";
+              };
             };
           };
 
@@ -134,6 +140,8 @@
                 WorkingDirectory = appRoot;
                 ExecStart = "${bun} --filter @englisch/api start";
                 Restart = "on-failure";
+              } // lib.optionalAttrs (cfg.api.environmentFile != null) {
+                EnvironmentFile = cfg.api.environmentFile;
               };
             };
           };
