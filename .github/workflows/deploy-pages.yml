@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      VITE_API_URL: https://temp.methanium.net/
+      VITE_API_URL: https://temp.methanium.net
 
     steps:
       - name: Checkout
