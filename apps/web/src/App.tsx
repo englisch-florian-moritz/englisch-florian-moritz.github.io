@@ -33,6 +33,7 @@ type ApiError = {
 };
 
 const totalQuestions = 10;
+const retryDelayMs = 1800;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === "object";
@@ -103,6 +104,10 @@ function getErrorMessage(body: unknown, fallback: string) {
   const message = getOptionalString(apiError.message ?? apiError.error);
 
   return `${status}${message || fallback}`;
+}
+
+function delay(milliseconds: number) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
 function getStationOffset(index: number) {
@@ -234,7 +239,7 @@ function StationCard({
 }) {
   return (
     <article
-      className="w-full max-w-2xl rounded-4xl border-2 border-black bg-white/90 p-6 text-left shadow-[6px_6px_0_#111] transition max-[700px]:translate-x-0!"
+      className="w-full max-w-2xl rounded-4xl border-2 border-black bg-[#f3f2e0] p-6 text-left shadow-[6px_6px_0_#111] transition max-[700px]:translate-x-0!"
       style={{
         transform: `translate(${station.offsetX}px, ${station.offsetY}px) rotate(${station.rotation}deg)`,
       }}
@@ -265,11 +270,8 @@ function StationCard({
 
 function FinishCard({ finishResult }: { finishResult: FinishResult }) {
   return (
-    <section className="mt-12 w-full max-w-3xl rounded-4xl border-2 border-black bg-white/95 p-7 text-left shadow-[7px_7px_0_#111]">
-      <p className="font-title text-sm tracking-[0.35em] uppercase opacity-70">
-        Final Result
-      </p>
-      <h2 className="mt-4 font-title text-4xl">Your journey ends here</h2>
+    <section className="mt-12 w-full max-w-3xl rounded-4xl border-2 border-black bg-[#fcf4e3] p-7 text-left shadow-[7px_7px_0_#111]">
+      <h2 className="font-title text-4xl">This is your story</h2>
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
         <div className="rounded-3xl border-2 border-black bg-[#fff7d6] p-5">
           <p className="font-title text-5xl">
@@ -299,9 +301,8 @@ function useJourney(apiUrl: string, apiPassword: string) {
   const [stations, setStations] = useState<Station[]>([]);
   const [finishResult, setFinishResult] = useState<FinishResult>();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  async function requestJson(path: string, body: unknown[]) {
+  async function requestJsonOnce(path: string, body: unknown[]) {
     const response = await fetch(`${apiUrl}${path}`, {
       method: "POST",
       headers: {
@@ -319,44 +320,55 @@ function useJourney(apiUrl: string, apiPassword: string) {
     return responseBody;
   }
 
-  async function loadNextQuestion(answeredQuestions: AnsweredQuestion[]) {
-    const body = await requestJson("/generate", answeredQuestions);
-
-    if (!isQuestion(body)) {
-      throw new Error("The API returned an invalid question.");
+  async function requestJson(path: string, body: unknown[]) {
+    for (;;) {
+      try {
+        return await requestJsonOnce(path, body);
+      } catch (requestError) {
+        console.error(`Retrying ${path}`, requestError);
+        await delay(retryDelayMs);
+      }
     }
+  }
 
-    setStations((currentStations) => [
-      ...currentStations,
-      createStation(body, currentStations.length),
-    ]);
+  async function loadNextQuestion(answeredQuestions: AnsweredQuestion[]) {
+    for (;;) {
+      const body = await requestJson("/generate", answeredQuestions);
+
+      if (isQuestion(body)) {
+        setStations((currentStations) => [
+          ...currentStations,
+          createStation(body, currentStations.length),
+        ]);
+        return;
+      }
+
+      console.error("Retrying /generate: invalid question response", body);
+      await delay(retryDelayMs);
+    }
   }
 
   async function loadFinishResult(answeredQuestions: AnsweredQuestion[]) {
-    const body = await requestJson("/finish", answeredQuestions);
+    for (;;) {
+      const body = await requestJson("/finish", answeredQuestions);
 
-    if (!isFinishResult(body)) {
-      throw new Error("The API returned an invalid final result.");
+      if (isFinishResult(body)) {
+        setFinishResult(body);
+        return;
+      }
+
+      console.error("Retrying /finish: invalid final result response", body);
+      await delay(retryDelayMs);
     }
-
-    setFinishResult(body);
   }
 
   async function startJourney() {
     setStations([]);
     setFinishResult(undefined);
-    setError("");
     setIsLoading(true);
 
-    try {
-      await loadNextQuestion([]);
-    } catch (requestError) {
-      setError(
-        requestError instanceof Error ? requestError.message : "Request failed",
-      );
-    } finally {
-      setIsLoading(false);
-    }
+    await loadNextQuestion([]);
+    setIsLoading(false);
   }
 
   async function chooseAnswer(stationIndex: number, selectedAnswer: string) {
@@ -370,28 +382,19 @@ function useJourney(apiUrl: string, apiPassword: string) {
     const answeredQuestions = getAnsweredQuestions(nextStations);
 
     setStations(nextStations);
-    setError("");
     setIsLoading(true);
 
-    try {
-      if (answeredQuestions.length >= totalQuestions) {
-        await loadFinishResult(answeredQuestions);
-        return;
-      }
-
+    if (answeredQuestions.length >= totalQuestions) {
+      await loadFinishResult(answeredQuestions);
+    } else {
       await loadNextQuestion(answeredQuestions);
-    } catch (requestError) {
-      setError(
-        requestError instanceof Error ? requestError.message : "Request failed",
-      );
-    } finally {
-      setIsLoading(false);
     }
+
+    setIsLoading(false);
   }
 
   return {
     chooseAnswer,
-    error,
     finishResult,
     isLoading,
     startJourney,
@@ -399,23 +402,22 @@ function useJourney(apiUrl: string, apiPassword: string) {
   };
 }
 
-function StartButton({ onStart }: { onStart: () => void }) {
+function StartButton({
+  isLoading = false,
+  onStart,
+}: {
+  isLoading?: boolean;
+  onStart: () => void;
+}) {
   return (
     <button
-      className="rounded-full border-2 border-black bg-white/90 px-8 py-4 font-text text-xl shadow-[5px_5px_0_#111] transition hover:-translate-y-0.5 hover:shadow-[7px_7px_0_#111]"
+      className="rounded-full border-2 border-black bg-white/90 px-8 py-4 font-text text-xl shadow-[5px_5px_0_#111] transition hover:-translate-y-0.5 hover:shadow-[7px_7px_0_#111] disabled:cursor-wait disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:shadow-[5px_5px_0_#111]"
+      disabled={isLoading}
       onClick={onStart}
       type="button"
     >
-      Start your own journey
+      {isLoading ? "Loading..." : "Start your own journey"}
     </button>
-  );
-}
-
-function ErrorBox({ error }: { error: string }) {
-  return (
-    <p className="mt-6 max-w-xl rounded-2xl border-2 border-black bg-white/90 p-4 text-red-800 shadow-[4px_4px_0_#111]">
-      {error}
-    </p>
   );
 }
 
@@ -466,12 +468,10 @@ function JourneyPath({
 }
 
 function IntroSection({
-  error,
   isLoading,
   onStart,
   stationCount,
 }: {
-  error: string;
   isLoading: boolean;
   onStart: () => void;
   stationCount: number;
@@ -480,11 +480,9 @@ function IntroSection({
     <section className="mx-auto flex max-w-5xl flex-col items-center text-center">
       <Hero />
 
-      {stationCount === 0 && !isLoading ? (
-        <StartButton onStart={onStart} />
+      {stationCount === 0 ? (
+        <StartButton isLoading={isLoading} onStart={onStart} />
       ) : null}
-
-      {error ? <ErrorBox error={error} /> : null}
     </section>
   );
 }
@@ -503,7 +501,6 @@ function JourneyPage({
   return (
     <main className="min-h-svh overflow-hidden px-4 py-8" data-api-url={apiUrl}>
       <IntroSection
-        error={journey.error}
         isLoading={journey.isLoading}
         onStart={startJourney}
         stationCount={journey.stations.length}

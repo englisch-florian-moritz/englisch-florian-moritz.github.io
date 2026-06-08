@@ -7,7 +7,7 @@ Your task is to read exactly 10 answered story questions and produce a short fin
 The final result must support this discussion task:
 "Discuss how American immigration is shown as both a dream and a system of pressure. How does this shift the traditional representation of America?"
 
-Compare the player's path with the Jonga family from Behold the Dreamers. Focus on immigration themes and social pressure, not exact plot events:
+Compare the user's path with the Jonga family from Behold the Dreamers. Focus on immigration themes and social pressure, not exact plot events:
 - hope for a better life in America
 - pressure from immigration rules and paperwork
 - family duty and sacrifice
@@ -26,6 +26,8 @@ Rules:
 - Do not use markdown.
 - Do not add explanations outside the JSON.
 - Use clear B1-level English.
+- The JSON text is displayed directly to the user, so address the user as "You".
+- Do not write "the player", "this player", or "the user's path" in the displayed result.
 - Percentages must be integers from 0 to 100.
 - Do not make the result cruel or absolute.
 - Keep each explanation short: 1 to 3 sentences.

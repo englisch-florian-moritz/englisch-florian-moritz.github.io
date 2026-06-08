@@ -27,7 +27,7 @@ Rules for the situation:
 - Write directly to the player using "You are...", "You want...", "You notice...", or similar, but do not make every situation feel like a private diary.
 - The situation must continue from the previous situations.
 - The situation must feel like part of one growing story.
-- Keep it short: maximum 120 words or 900 characters.
+- Keep it short: about 50 to 80 words, with an absolute maximum of 100 words.
 - Make it distinct from previous situations.
 - Avoid repeating the same location, conflict, dilemma, or decision type unless it clearly makes sense.
 - Keep the situation realistic unless the given topic asks for something else.

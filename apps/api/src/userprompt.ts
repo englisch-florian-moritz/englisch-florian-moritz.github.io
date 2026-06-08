@@ -105,6 +105,8 @@ ${input}
 
 Generate the next single situation, question, and three answer options.
 
+Keep the situation concise: aim for 50 to 80 words, and never go above 100 words.
+
 Use the theme, time period, and base questions as guidance. Continue the story from the previous JSON. Avoid repeating the same kind of situation or decision.
 
 The full journey has a maximum of 10 generated questions. Count the previous JSON items to know which question comes next. If the next question is 8 or 9, move the story toward consequences and resolution. If the next question is 10, write a closing immigration-focused situation that ends the journey clearly instead of creating a cliffhanger.
