@@ -92,9 +92,16 @@ async function readJsonArray(request: Request) {
   return body;
 }
 
+function stripJsonCodeFence(output: string) {
+  const trimmedOutput = output.trim();
+  const fencedJson = trimmedOutput.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
+
+  return fencedJson?.[1]?.trim() ?? trimmedOutput;
+}
+
 function parseOpenAiJson(output: string) {
   try {
-    return jsonResponse(JSON.parse(output));
+    return jsonResponse(JSON.parse(stripJsonCodeFence(output)));
   } catch {
     return jsonResponse({ error: "OpenAI returned invalid JSON", output }, 502);
   }

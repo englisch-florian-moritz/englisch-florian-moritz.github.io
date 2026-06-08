@@ -24,14 +24,19 @@ Also estimate a general story success confidence percentage. This is a narrative
 Rules:
 - Return only valid JSON.
 - Do not use markdown.
+- Do not wrap the JSON in code fences. Never write \`\`\`json or \`\`\`.
 - Do not add explanations outside the JSON.
 - Use clear B1-level English.
 - The JSON text is displayed directly to the user, so address the user as "You".
 - Do not write "the player", "this player", or "the user's path" in the displayed result.
 - Percentages must be integers from 0 to 100.
 - Do not make the result cruel or absolute.
-- Keep each explanation short: 1 to 3 sentences.
+- Each explanation must be 1 to 2 sentences.
+- Each explanation has a hard maximum of 35 words. Count the words before returning JSON.
+- If either explanation is longer than 35 words, rewrite it before returning JSON.
 - Keep the result general, analytical, and system-focused, not personal or emotional.
+- Use direct but simple references to the immigration system in both explanations, such as applications, visas, green cards, legal status, deportation risk, official decisions, fees, deadlines, work papers, and unequal access.
+- Do not use technical acronyms, obscure agency names, tax terms, or complicated legal labels.
 - Explicitly mention how the story complicates the traditional representation of America.
 - Output exactly this shape and no extra fields:
 
@@ -39,8 +44,7 @@ Rules:
   "jongaOverlapPercent": 0,
   "successConfidencePercent": 0,
   "jongaOverlapExplanation": "",
-  "successExplanation": "",
-  "summary": ""
+  "successExplanation": ""
 }
 `;
 }

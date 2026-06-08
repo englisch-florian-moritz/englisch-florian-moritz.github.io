@@ -6,7 +6,7 @@ Immigration plays a huge role. America is traditionally shown as a place of free
 Time period / setting:  
 ~2007-2008
 
-Base questions and situations to learn the style from. These examples are designed to support the operator "discuss": they show both sides, compare the traditional image of America with immigration reality, and give arguments for analysis. Keep the generated story concrete and immigration-system-focused, with attention to forms, evidence, law, documents, deportation, work authorization, school access, agency decisions, and the gap between promise and reality. Do not write mainly about feelings:  
+Base questions and situations to learn the style from. These examples are designed to support the operator "discuss": they show both sides, compare the traditional image of America with immigration reality, and give arguments for analysis. Keep the generated story concrete and immigration-system-focused, but use simple references students can understand: applications, visas, green cards, forms, documents, deportation, work papers, school access, lawyers, interviews, official decisions, and the gap between promise and reality. Include people of color where realistic, and be accurate about unequal treatment: people of color, poorer applicants, and people from certain countries can face more suspicion, denials, document burdens, workplace checks, and enforcement pressure. Do not write mainly about feelings. Do not use technical acronyms, obscure agency names, tax terms, or complicated legal labels unless specifically needed:  
 [  
 {  
 "situation": "You arrive in New Jersey in 2007 with your family. The entry stamp allows you to stay only for a limited time, and the lawyer asks for rent records, school enrollment, medical papers, and proof of income. America is presented as open to people who work hard, but the first step is proving eligibility through documents that many new arrivals do not fully control.",  
@@ -18,7 +18,7 @@ Base questions and situations to learn the style from. These examples are design
 ]  
 },  
 {  
-"situation": "In English class, the textbook says hard work leads to success in America. The same week, an employer refuses to schedule an interview without a Social Security number and work authorization. The immigration system turns the promise of equal opportunity into a gatekeeping process: before work can prove ability, legal status decides who may even compete.",  
+"situation": "In English class, the textbook says hard work leads to success in America. The same week, an employer refuses to schedule an interview without legal work papers. The immigration system turns the promise of equal opportunity into a gatekeeping process: before work can prove ability, legal status decides who may even compete.",  
 "question": "What system-based argument should be raised in class?",  
 "answers": [  
 "Status controls access",  
@@ -27,7 +27,7 @@ Base questions and situations to learn the style from. These examples are design
 ]  
 },  
 {  
-"situation": "A letter from immigration services gives 30 days to submit missing evidence. It asks for translated birth certificates, tax information, and proof of continuous residence. America is represented as a country of clear rights, but the letter shows that access to those rights depends on reading legal language, paying fees, and producing exact evidence on time.",  
+"situation": "A letter about the family application gives 30 days to submit missing documents. It asks for translated birth certificates, school records, and proof of address. America is represented as a country of clear rights, but the letter shows that access to those rights depends on reading official language, paying fees, and producing exact proof on time.",  
 "question": "How should the missing-evidence deadline be handled?",  
 "answers": [  
 "Send partial evidence",  
@@ -63,7 +63,7 @@ Base questions and situations to learn the style from. These examples are design
 ]  
 },  
 {  
-"situation": "At a free legal clinic, families are sorted into different legal categories. One person can apply for adjustment of status, another must wait years, and another has no safe path unless a law changes. America is portrayed as equal before the law, but immigration law gives different options based on entry date, sponsor, income, and category.",  
+"situation": "At a free legal clinic, families are sorted into different possible paths. One person can apply for a green card, another must wait years, and another has no safe path unless a law changes. America is portrayed as equal before the law, but immigration rules give different options based on entry date, sponsor, money, and documents.",  
 "question": "Which issue should be checked first at the clinic?",  
 "answers": [  
 "Exact legal category",  
@@ -81,7 +81,7 @@ Base questions and situations to learn the style from. These examples are design
 ]  
 },  
 {  
-"situation": "A college program advertises itself as an equal opportunity. The application then asks for identity numbers, proof of income, residency information, and documents tied to family status. Even students who meet academic requirements can be blocked by administrative rules. Getting papers or entering school is not enough if every next step requires another form of proof.",  
+"situation": "A college program advertises itself as an equal opportunity. The application then asks for proof of identity, proof of income, residency information, and documents tied to family status. Even students who meet academic requirements can be blocked by administrative rules. Getting papers or entering school is not enough if every next step requires another form of proof.",  
 "question": "How should the application barrier be handled?",  
 "answers": [  
 "Ask about alternatives",  
@@ -105,18 +105,24 @@ ${input}
 
 Generate the next single situation, question, and three answer options.
 
-Keep the situation concise: aim for 50 to 80 words, and never go above 100 words.
+The question must be 15 to 18 words long. Count the words before returning JSON and rewrite the question if it is outside that range.
+
+Each answer option must be 7 to 11 words long. Count the words before returning JSON and rewrite any answer option outside that range.
+
+If there are no previous generated questions, write a longer opening situation of about 110 to 160 words. Give the user clear story context: the player's name, age, gender if useful, country or region of origin, whether the player is a person of color, family situation, and why the player wants to go to or stay in the USA. State race, nationality, and origin directly and unsentimentally when relevant, for example "You are Cameroonian," "You are Black," "You are Latina," or "You are from an African family." Do not use soft vague phrasing like "you belong to the people of color."
+
+For all later generated questions, keep the situation concise: aim for 50 to 80 words, and never go above 100 words.
 
 Use the theme, time period, and base questions as guidance. Continue the story from the previous JSON. Avoid repeating the same kind of situation or decision.
 
 The full journey has a maximum of 10 generated questions. Count the previous JSON items to know which question comes next. If the next question is 8 or 9, move the story toward consequences and resolution. If the next question is 10, write a closing immigration-focused situation that ends the journey clearly instead of creating a cliffhanger.
 
-Make the situation and question strongly connected to immigration, deportation risk, legal status, documents, official letters, court or agency decisions, work/school consequences, or community/legal support. Keep it generalized and system-focused: the player is involved in a hard decision, but the main point should be how the immigration system changes the meaning of American opportunity.
+Make the situation and question strongly connected to immigration, deportation risk, legal status, documents, official letters, green card or visa decisions, work/school consequences, or community/legal support. Keep it generalized and system-focused: the player is involved in a hard decision, but the main point should be how the immigration system changes the meaning of American opportunity. Use simple terms students know or can guess from context. Avoid acronyms, obscure agency names, tax terms, overly specific visa names, exact legal categories, quoted legal tests, or narrow case details unless they are necessary for the decision.
 
 The generated situation should help the student later discuss the difference between the traditional representation of America and immigration reality. Include concrete contrasts such as: America promises equal opportunity, but access depends on papers; America praises hard work, but hard work does not remove deportation risk; America values freedom, but public speech can expose status; America offers education, but forms and status still limit access; getting papers helps, but does not automatically bring success, safety, or belonging.
 
 Avoid writing the situation as emotional reflection. Do not use phrases like "this feels like," "you feel," "it feels," "you are hopeful," or "the dream feels." Instead, describe the rule, institution, document, deadline, or enforcement consequence and ask for a concrete decision.
 
-Return only raw valid JSON that can be passed directly into JSON.parse.
+Return only raw valid JSON that can be passed directly into JSON.parse. Do not wrap it in markdown or code fences. Never write \`\`\`json or \`\`\`.
 `;
 }
