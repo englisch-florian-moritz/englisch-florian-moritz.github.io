@@ -2,7 +2,7 @@ function Hero() {
   return (
     <>
       <img
-        className="w-[min(520px,82vw)] scale-110 max-[700px]:w-[76vw] max-[700px]:scale-100"
+        className="w-[min(520px,82vw)] scale-75 max-[700px]:w-[76vw] max-[700px]:scale-100 mt-5"
         src="/title.png"
         alt="Title"
       />
@@ -11,9 +11,15 @@ function Hero() {
         className="relative h-[38vh] w-full max-[700px]:h-[32vh]"
         aria-hidden="true"
       >
-        <div className="absolute top-[calc(50%+0.5rem)] left-0 z-10 w-full -translate-y-1/2 overflow-hidden">
+        <div
+          className="absolute top-[calc(50%+0.5rem)] left-0 z-10 w-full -translate-y-1/2 overflow-hidden"
+          style={{
+            maskImage: 'linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)',
+          }}
+        >
           <div className="flex w-max animate-scroll-left [animation-duration:60s]">
-            {Array.from({ length: 12 }).map((_, index) => (
+            {Array.from({ length: 8 }).map((_, index) => (
               <img
                 key={index}
                 className="w-125 flex-none scale-75 opacity-75 max-[700px]:w-85"
@@ -32,9 +38,15 @@ function Hero() {
           />
         </div>
 
-        <div className="absolute top-[calc(50%+1.75rem)] left-0 z-30 w-full -translate-y-1/2 overflow-hidden">
+        <div
+          className="absolute top-[calc(50%+1.75rem)] left-0 z-30 w-full -translate-y-1/2 overflow-hidden"
+          style={{
+            maskImage: 'linear-gradient(to right, transparent 0%, black 5%, black 88%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 5%, black 58%, transparent 100%)',
+          }}
+        >
           <div className="flex w-max animate-scroll-left">
-            {Array.from({ length: 12 }).map((_, index) => (
+            {Array.from({ length: 9 }).map((_, index) => (
               <img
                 key={index}
                 className="w-125 flex-none max-[700px]:w-85"
