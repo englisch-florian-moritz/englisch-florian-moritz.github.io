@@ -42,7 +42,7 @@ function Hero() {
           className="absolute top-[calc(50%+1.75rem)] left-0 z-30 w-full -translate-y-1/2 overflow-hidden"
           style={{
             maskImage: 'linear-gradient(to right, transparent 0%, black 5%, black 88%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 5%, black 58%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 88%, transparent 100%)',
           }}
         >
           <div className="flex w-max animate-scroll-left">
